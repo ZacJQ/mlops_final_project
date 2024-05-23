@@ -33,42 +33,7 @@ class MenuItemUpdate(BaseModel):
 
 # ----------------------------
 
-@app.post("/menu", response_model=Dict)
-async def create_menu_item(item: MenuItemCreate, db: Session = Depends(get_db)):
-    db_item = MenuItem(name=item.name, price=item.price, image=item.image)
-    db.add(db_item)
-    db.commit()
-    db.refresh(db_item)
-    return {"id": db_item.id, "name": db_item.name, "price": db_item.price, "image": db_item.image}
 
-@app.get("/menu", response_model=Dict[int, Dict[str, float]])
-async def get_menu(db: Session = Depends(get_db)):
-    menu_items = db.query(MenuItem).all()
-    return {item.id: {"name": item.name, "price": item.price, "image": item.image} for item in menu_items}
-
-@app.put("/menu/{item_id}", response_model=Dict)
-async def update_menu_item(item_id: int, item: MenuItemUpdate, db: Session = Depends(get_db)):
-    db_item = db.query(MenuItem).filter(MenuItem.id == item_id).first()
-    if not db_item:
-        raise HTTPException(status_code=404, detail="Item not found")
-    db_item.name = item.name
-    db_item.price = item.price
-    db_item.image = item.image
-    db.commit()
-    db.refresh(db_item)
-    return {"id": db_item.id, "name": db_item.name, "price": db_item.price, "image": db_item.image}
-
-@app.delete("/menu/{item_id}", response_model=Dict)
-async def delete_menu_item(item_id: int, db: Session = Depends(get_db)):
-    db_item = db.query(MenuItem).filter(MenuItem.id == item_id).first()
-    if not db_item:
-        raise HTTPException(status_code=404, detail="Item not found")
-    db.delete(db_item)
-    db.commit()
-    return {"message": "Item deleted successfully"}
-
-
-# ------------------------------------
 
 class MenuItem(Base):
     __tablename__ = "menu_items"
