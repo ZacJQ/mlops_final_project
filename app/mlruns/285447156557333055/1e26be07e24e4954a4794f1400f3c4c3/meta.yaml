@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/zac/Codes/ML_Ops/ML_Ops_Project/Final_project/app/mlruns/285447156557333055/1e26be07e24e4954a4794f1400f3c4c3/artifacts
+end_time: 1716392410669
+entry_point_name: ''
+experiment_id: '285447156557333055'
+lifecycle_stage: active
+run_id: 1e26be07e24e4954a4794f1400f3c4c3
+run_name: secretive-shoat-552
+run_uuid: 1e26be07e24e4954a4794f1400f3c4c3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1716392408857
+status: 4
+tags: []
+user_id: zac

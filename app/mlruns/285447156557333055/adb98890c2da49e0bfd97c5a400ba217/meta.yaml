@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/zac/Codes/ML_Ops/ML_Ops_Project/Final_project/app/mlruns/285447156557333055/adb98890c2da49e0bfd97c5a400ba217/artifacts
+end_time: 1716394543738
+entry_point_name: ''
+experiment_id: '285447156557333055'
+lifecycle_stage: active
+run_id: adb98890c2da49e0bfd97c5a400ba217
+run_name: enchanting-fawn-671
+run_uuid: adb98890c2da49e0bfd97c5a400ba217
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1716394541987
+status: 3
+tags: []
+user_id: zac

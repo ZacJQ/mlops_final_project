@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/zac/Codes/ML_Ops/ML_Ops_Project/Final_project/mlruns/862928094042011279/cd7a50347e3841b9840b528f55318868/artifacts
+end_time: 1716396852087
+entry_point_name: ''
+experiment_id: '862928094042011279'
+lifecycle_stage: active
+run_id: cd7a50347e3841b9840b528f55318868
+run_name: debonair-whale-604
+run_uuid: cd7a50347e3841b9840b528f55318868
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1716396850388
+status: 3
+tags: []
+user_id: zac
