@@ -1,0 +1,6 @@
+apache-airflow
+mlflow
+pandas
+sqlalchemy
+scikit-learn
+kafka-python
