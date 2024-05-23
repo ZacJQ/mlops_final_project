@@ -157,13 +157,13 @@ async def place_order(order: OrderCreate, db: Session = Depends(get_db)):
     db.refresh(training_data)
 
     # Produce message to Kafka
-    message = {
-        "item_no_quantity": order.item_no_quantity,
-        "time_to_prep": order.time_to_prep,
-        "no_of_chefs": order.no_of_chefs,
-        "Veg_True": order.Veg_True
-    }
-    producer.send('order_topic', message)
+    # message = {
+    #     "item_no_quantity": order.item_no_quantity,
+    #     "time_to_prep": order.time_to_prep,
+    #     "no_of_chefs": 1,
+    #     "Veg_True": True
+    # }
+    # producer.send('order_topic', message)
 
     order_details = db.query(OrderItem).filter(OrderItem.order_id == db_order.id).all()
     return {
@@ -203,8 +203,8 @@ async def update_order_status(table_no: int, order_update: OrderUpdate, db: Sess
 
 
 # Define the Kafka producer
-producer = KafkaProducer(
-    bootstrap_servers='localhost:9092',
-    value_serializer=lambda v: json.dumps(v).encode('utf-8')
-)
+# producer = KafkaProducer(
+#     bootstrap_servers='localhost:9092',
+#     value_serializer=lambda v: json.dumps(v).encode('utf-8')
+# )
 
