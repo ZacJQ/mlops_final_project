@@ -6,6 +6,9 @@ import pandas as pd
 import sqlalchemy
 from sklearn.linear_model import LinearRegression
 import joblib
+from kafka import KafkaConsumer
+import json
+
 
 # Define default arguments
 default_args = {
@@ -27,11 +30,24 @@ dag = DAG(
     catchup=False,
 )
 
-def fetch_training_data():
-    DATABASE_URL = "postgresql://postgres:1234@localhost/restaurant_db"
-    engine = sqlalchemy.create_engine(DATABASE_URL)
-    query = "SELECT * FROM training_data"
-    df = pd.read_sql(query, engine)
+def consume_messages_from_kafka():
+    consumer = KafkaConsumer(
+        'order_topic',
+        bootstrap_servers='localhost:9092',
+        auto_offset_reset='earliest',
+        enable_auto_commit=True,
+        group_id='order-consumer-group',
+        value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+    )
+
+    messages = []
+    for message in consumer:
+        messages.append(message.value)
+        if len(messages) >= 100:  # Process every 100 messages for example
+            break
+
+    # Save messages to a CSV for training
+    df = pd.DataFrame(messages)
     df.to_csv('/tmp/training_data.csv', index=False)
 
 def train_model():
@@ -61,9 +77,9 @@ def train_model():
         mlflow.log_artifact('/tmp/model.pkl', "model")
 
 # Define the tasks
-fetch_data_task = PythonOperator(
-    task_id='fetch_training_data',
-    python_callable=fetch_training_data,
+consume_messages_task = PythonOperator(
+    task_id='consume_messages_from_kafka',
+    python_callable=consume_messages_from_kafka,
     dag=dag,
 )
 
@@ -74,4 +90,4 @@ train_model_task = PythonOperator(
 )
 
 # Set task dependencies
-fetch_data_task >> train_model_task
+consume_messages_task >> train_model_task

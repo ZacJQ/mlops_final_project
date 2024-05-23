@@ -6,6 +6,8 @@ from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, F
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import datetime
+from kafka import KafkaProducer
+import json
 
 DATABASE_URL = "postgresql://postgres:1234@localhost/restaurant_db"
 
@@ -154,6 +156,15 @@ async def place_order(order: OrderCreate, db: Session = Depends(get_db)):
     db.refresh(db_order)
     db.refresh(training_data)
 
+    # Produce message to Kafka
+    message = {
+        "item_no_quantity": order.item_no_quantity,
+        "time_to_prep": order.time_to_prep,
+        "no_of_chefs": order.no_of_chefs,
+        "Veg_True": order.Veg_True
+    }
+    producer.send('order_topic', message)
+
     order_details = db.query(OrderItem).filter(OrderItem.order_id == db_order.id).all()
     return {
         "table_no": db_order.table_no,
@@ -189,3 +200,11 @@ async def update_order_status(table_no: int, order_update: OrderUpdate, db: Sess
         "status": db_order.status,
         "served": db_order.served
     }
+
+
+# Define the Kafka producer
+producer = KafkaProducer(
+    bootstrap_servers='localhost:9092',
+    value_serializer=lambda v: json.dumps(v).encode('utf-8')
+)
+
